@@ -864,221 +864,26 @@ public class Pass2 {
 
 
 
+/*****************************************************TIKINTER******************************************************************************************************/
 
 
 
 
-
-
-
-
-
-
-
-
-GUI
 
 from tkinter import *
-import tkinter as tk
-from tkinter import Entry,Tk
-from PIL import Image
-from PIL import ImageTk
-from tkinter import ttk
-root=Tk()
+parent = Tk()
+parent.geometry("500x200")
+name = Button(parent,text = "Name",bg='pink').grid(row = 0, column =
+0)
+e1 = Entry(parent).grid(row = 0, column = 1)
+password = Button(parent,text = "Password",bg='pink').grid(row = 1,
+column = 0)
+e2 = Entry(parent).grid(row = 1, column = 1)
+submit = Button(parent, text = "Submit",bg='blue',
+fg='white',activebackground='pink').grid( row = 5, column = 1)
+parent.mainloop()
 
 
 
 
-def confirm():
-	newWindow = Toplevel(root)
 
-	# sets the title of the
-	newWindow.title("Confirmation")
-
-	newWindow.geometry("300x300")
-	
-	
-     
-	label1=Label(newWindow,text="Your Payment Has Been Done Successfully.").place(x=10,y=70)
-	label2=Label(newWindow,text="We Have Also Sent The Booking Details On Your").place(x=10,y=90)
-	label3=Label(newWindow,text="Registered Mobile Number.").place(x=10,y=110)
-	label4=Label(newWindow,text="Thank You for using MSRTC app for booking your ticket.").place(x=10,y=130)
-
-def payment():
-	newWindow = Toplevel(root)
-	newWindow.title("Payments")
-
-
-	newWindow.geometry("300x580")
-	newWindow.minsize(300,580)
-	newWindow.maxsize(300,580)
-	newWindow.configure(bg='white')
-	image = Image.open("title.png")
-
-	
-	# Resize the image using resize() method
-	resize_image = image.resize((300, 15))
-	
-	img = ImageTk.PhotoImage(resize_image)
-
-	label1 = Label(newWindow,image=img,bg='white')
-	label1.image =img
-	label1.place(x=0,y=0)
-	image = Image.open("screen.png")
-
-
-	resize_image = image.resize((300, 50))
-	
-	img = ImageTk.PhotoImage(resize_image)
-
-	label1 = Label(newWindow,image=img,bg='white')
-	label1.image =img
-	label1.place(x=0,y=10)
-	image=Image.open("map3.png")
-	resize_image =image.resize((20, 20))
-	img = ImageTk.PhotoImage(resize_image)
-	button= Button(newWindow, image=img,borderwidth=0)
-	button.image=img
-	button.place(x=262,y=15)
-	image=Image.open("arrow.png") 
-	resize_image =image.resize((20, 20))
-	img = ImageTk.PhotoImage(resize_image)
-	button= Button(newWindow, image=img,borderwidth=0)
-	button.image=img
-	button.place(x=5,y=15)
-
-
-	label2=Label(newWindow, text="Payments",bg="white", font="arial 13 bold").place(x=100, y=72)
-
-
-	b = Button(newWindow, bg='white',height=8,width=50,borderwidth=0).place(x=0,y=100) 
-	separator = ttk.Separator(newWindow, orient='horizontal')
-	separator.place(relx=0, rely=0.26, relwidth=1, relheight=1)
-	Label(newWindow,text="PhonePe, Google pay(UPI Wallet)",font="arial 9 bold",bg="white").place(x=55,y=110)
-	image = Image.open("UPI-Logo.png")
-	resize_image = image.resize((40, 40))
-	img1 = ImageTk.PhotoImage(resize_image)
-	label1 = Label(newWindow,image=img1,bg='white')
-	label1.image =img1
-	label1.place(x=10,y=100)
-
-
-
-	b = Button(newWindow, bg='white',height=8,width=50,borderwidth=0).place(x=0,y=153)  
-	separator = ttk.Separator(newWindow, orient='horizontal')
-	separator.place(relx=0, rely=0.35, relwidth=1, relheight=1)
-	label2=Label(newWindow,text="Credit Card, Debit Card",font="arial 9 bold",bg="white").place(x=55,y=168)
-	image = Image.open("credit.png")
-	resize_image = image.resize((40, 40))
-	img2 = ImageTk.PhotoImage(resize_image)
-	label1 = Label(newWindow,image=img2,bg='white')
-	label1.image =img2
-	label1.place(x=10,y=155)
-
-
-	b = Button(newWindow, bg='white',height=8,width=50,borderwidth=0).place(x=0,y=204)  
-	separator = ttk.Separator(newWindow, orient='horizontal')
-	separator.place(relx=0, rely=0.45, relwidth=1, relheight=1)
-	label3=Label(newWindow,text="Net Banking",font="arial 9 bold",bg="white").place(x=55,y=225)
-	image = Image.open("netb.png")
-	resize_image = image.resize((40, 40))
-	img3 = ImageTk.PhotoImage(resize_image)
-	label1 = Label(newWindow,image=img3,bg='white')
-	label1.image =img3
-	label1.place(x=10,y=210)
-
-
-
-	image = Image.open("QRimg.png")
-	resize_image = image.resize((120, 120))
-	img4 = ImageTk.PhotoImage(resize_image)
-	label1 = Label(newWindow,image=img4,bg='white')
-	label1.image =img4
-	label1.place(x=90,y=280)
-	
-
-
-
-	label1=Label(newWindow,text="OR",font="arial 9").place(x=140,y=410)
-
-	label2=Label(newWindow,text="Enter Your UPI ID",font="arial 9 bold").place(x=55,y=430)
-	upi_id=tk.StringVar()
-	upi_id=Entry(newWindow,width=30,textvariable=upi_id).place(x=55,y=450)
-
-	b = Button(newWindow, text="Make Payment", bg='orange',command=confirm,height=2,width=20,borderwidth=0).place(x=80,y=480)  
-
-
-root.geometry("300x580")
-root.minsize(300,580)
-root.maxsize(300,580)
-root.configure(bg='white')
-image = Image.open("title.png")
-
- 
-# Resize the image using resize() method
-resize_image = image.resize((300, 15))
- 
-img = ImageTk.PhotoImage(resize_image)
-
-label1 = Label(image=img,bg='white')
-label1.image =img
-label1.place(x=0,y=0)
-image = Image.open("screen.png")
-
-
-resize_image = image.resize((300, 50))
- 
-img = ImageTk.PhotoImage(resize_image)
-
-label1 = Label(image=img,bg='white')
-label1.image =img
-label1.place(x=0,y=10)
-image=Image.open("map3.png")
-resize_image =image.resize((20, 20))
-img = ImageTk.PhotoImage(resize_image)
-button= Button(root, image=img,borderwidth=0)
-button.image=img
-button.place(x=262,y=15)
-image=Image.open("arrow.png") 
-resize_image =image.resize((20, 20))
-img = ImageTk.PhotoImage(resize_image)
-button= Button(root, image=img,borderwidth=0)
-button.image=img
-button.place(x=5,y=15)
-label2=Label(root,text="Confirmation",bg='white', font="arial 13 bold").place(x=100,y=72)
-
-frame1=Frame(root, bg='#C0C0C0',height=70 ,width=300).place(x=0,y=100)
-label1_frame1=Label(frame1,text="Route: CHINCHWAD to PANDHARPUR via",font="arial 9",bg="#C0C0C0").place(x=15,y=105)
-label2_frame1=Label(frame1, text="Swargate, Pune(31/08/2022 14:30:00)",font="arial 9",bg="#C0C0C0").place(x=55,y=120)
-label3_frame1=Label(frame1, text="Bus Type: ORDINARY EXPRESS",font="arial 9",bg="#C0C0C0").place(x=15,y=140)
-
-
-frame2=Frame(root, bg='#C0C0C0',height=80 ,width=300).place(x=0,y=180)
-label1_frame2=Label(frame2,text="Boarding Stop: SWARGATE, PUNE(15:00)",font="arial 9",bg="#C0C0C0").place(x=15,y=185)
-label2_frame2=Label(frame2, text="Alighting Stop: PANDHARPUR(20:30)",font="arial 9",bg="#C0C0C0").place(x=15,y=203)
-label3_frame2=Label(frame2, text="Total Seats: 1",font="arial 9",bg="#C0C0C0").place(x=15,y=221)
-label3_frame2=Label(frame2, text="Seat Number: 5",font="arial 9",bg="#C0C0C0").place(x=15,y=236)
-
-
-frame3=Frame(root, bg='#C0C0C0',height=30 ,width=300).place(x=0,y=275)
-label1_frame3=Label(frame3,text="Contact Details",font="arial 9",bg="#C0C0C0").place(x=15,y=280)
-
-
-frame4=Frame(root, bg='#666666',height=30 ,width=300, border=1).place(x=0,y=300)
-label1_frame4=Label(frame4,text="Mobile Number: +91-9865432121",font="arial 9",bg="#666666").place(x=15,y=305)
-
-
-frame5=Frame(root, bg='#C0C0C0',height=100 ,width=300).place(x=0,y=345)
-label1_frame5=Label(frame5,text="Passenger Details",font="arial 9",bg="#C0C0C0").place(x=15,y=350)
-
-
-frame6=Frame(root, bg='#666666',height=80 ,width=300).place(x=0,y=370)
-label1_frame6=Label(frame6,text="Name: Dipesh Toke",font="arial 9",bg="#666666").place(x=15,y=375)
-label1_frame6=Label(frame6,text="Age: 20",font="arial 9",bg="#666666").place(x=15,y=395)
-label1_frame6=Label(frame6,text="Gender Male",font="arial 9",bg="#666666").place(x=15,y=415)
-
-
-b = Button(root, text="Pay / ??? ???", bg='orange',command=payment,height=2,width=20,borderwidth=0).place(x=80,y=480)  
-
-
-root.mainloop()
