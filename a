@@ -540,178 +540,157 @@ public class worstFit
 
 
 
-PASS1
-################################################ INPUT FILE ##############################################
-####################################### CREATE INPUT FILE NAMED AS "in.txt" #############################
-	START	100	
-	READ	A	
-LABEL	MOVER	A,B	
-	LTORG
-		='5'	
-		='1'	
-		='6'	
-		='7'	
-	MOVEM	A,B	
-	LTORG	
-		='2'	
-LOOP	READ	B	
-A	DS	1	
-B	DC	'1'	
-		='1'	
-	END
-################################################ CODE #####################################################
-################################# create code file named "pass1.java" ####################################
-import java.io.*;
-class pass1
-{
-	public static void main(String args[])throws Exception
-	{
-		FileReader FP=new FileReader("in.txt");
-		BufferedReader bufferedReader = new BufferedReader(FP);		
-		
-		String line=null;
-		int line_count=0,LC=0,symTabLine=0,opTabLine=0,litTabLine=0,poolTabLine=0;
-		  
-		 //Data Structures
-		 final int MAX=100;
-		 String SymbolTab[][]=new String[MAX][3];
-		 String OpTab[][]=new String[MAX][3];
-		 String LitTab[][]=new String[MAX][2];
-		 int PoolTab[]=new int[MAX];
-		 int litTabAddress=0;
-/*---------------------------------------------------------------------------------------------------*/
-		 
-		 System.out.println("___________________________________________________");
-		    while((line = bufferedReader.readLine()) != null)
-		     {
-		     	 String[] tokens = line.split("\t");
-		     	if(line_count==0)
-		     	{
-		     		LC=Integer.parseInt(tokens[2]);			//set LC to operand of START
-		     		for(int i=0;i<tokens.length;i++)		//for printing the input program
-		     	 		System.out.print(tokens[i]+"\t");
-		     	 	System.out.println("");
-		     	}
-		     	else
-		     	{
-			     	 for(int i=0;i<tokens.length;i++) //for printing the input program
-			     	 	System.out.print(tokens[i]+"\t");
-			     	 System.out.println("");
-			     	if(!tokens[0].equals(""))
-			     	{
-			 
-			     		//Inserting into Symbol Table
-			     		SymbolTab[symTabLine][0]=tokens[0];
-			     		SymbolTab[symTabLine][1]=Integer.toString(LC);
-			     		SymbolTab[symTabLine][2]=Integer.toString(1);
-			     		symTabLine++;
-			     	}
-				else if(tokens[1].equalsIgnoreCase("DS")||tokens[1].equalsIgnoreCase("DC"))
-				{
-					//Entry into symbol table for declarative statements
-					SymbolTab[symTabLine][0]=tokens[0];
-			     		SymbolTab[symTabLine][1]=Integer.toString(LC);
-			     		SymbolTab[symTabLine][2]=Integer.toString(1);
-			     		symTabLine++;
-				}
 
-				if(tokens.length==3 && tokens[2].charAt(0)=='=')
+
+Imput:-
+LOAD A
+STORE B
+MACRO 
+ABC
+LOAD p
+SUB q
+MEND
+MACRO
+ADD1 ARG
+LOAD X
+STORE ARG
+MEND
+MACRO
+ADD5 A1, A2, A3
+STORE A2
+ADD1 5
+ADD1 10
+LOAD A1
+LOAD A3
+MEND
+ABC
+ADD5 D1, D2, D3
+END
+
+
+
+
+
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+
+public class macrop1 {
+
+	public static void main(String[] args) throws IOException{
+		BufferedReader br=new BufferedReader(new FileReader("input.asm"));
+		
+		FileWriter mnt=new FileWriter("mnt.txt");
+		FileWriter mdt=new FileWriter("mdt.txt");
+		FileWriter fvsppl=new FileWriter("fvsppl.txt");
+		FileWriter avsppl=new FileWriter("avsppl.txt");
+		FileWriter pnt=new FileWriter("pntab.txt");
+		FileWriter ir=new FileWriter("intermediate.txt");
+		LinkedHashMap<String, Integer> pntab=new LinkedHashMap<>();
+		String line;
+		String Macroname = null;
+		int mdtp=1,kpdtp=0,paramNo=1,pp=0,kp=0,flag=0;
+		while((line=br.readLine())!=null)
+		{
+			
+			String parts[]=line.split("\\s+");
+			if(parts[0].equalsIgnoreCase("MACRO"))
+			{
+				flag=1;
+				line=br.readLine();
+				parts=line.split("\\s+");
+				Macroname=parts[0];
+				if(parts.length<=1)
 				{
-					//Entry of literals into literal table
-					LitTab[litTabLine][0]=tokens[2];
-			     		LitTab[litTabLine][1]=Integer.toString(LC);
-			     		litTabLine++;
+					mnt.write(parts[0]+"\t"+pp+"\t"+"\t"+mdtp+"\n");
+					continue;
 				}
-	
-				else if(tokens[1]!=null)
+				for(int i=1;i<parts.length;i++) //processing of parameters
 				{
-						//Entry of Mnemonic in opcode table
-					OpTab[opTabLine][0]=tokens[1];
+					parts[i]=parts[i].replaceAll("[&,]", "");
 					
-					if(tokens[1].equalsIgnoreCase("START")||tokens[1].equalsIgnoreCase("END")||tokens[1].equalsIgnoreCase("ORIGIN")||tokens[1].equalsIgnoreCase("EQU")||tokens[1].equalsIgnoreCase("LTORG"))		//if Assembler Directive
+					fvsppl.write(parts[0]+"\n"+"------------------"+"\n"+"\n");
+					avsppl.write(parts[0]+"\n"+"------------------"+"\n"+"\n");
+					if(parts[i].contains("="))
 					{
-			     			OpTab[opTabLine][1]="AD";
-						OpTab[opTabLine][2]="R11";					
-					}			     	
-					else if(tokens[1].equalsIgnoreCase("DS")||tokens[1].equalsIgnoreCase("DC"))
-					{
-						OpTab[opTabLine][1]="DL";
-						OpTab[opTabLine][2]="R7";					
+						++kp;
+						String keywordParam[]=parts[i].split("=");
+						pntab.put(keywordParam[0], paramNo++);
+			
 					}
 					else
 					{
-						OpTab[opTabLine][1]="IS";
-						OpTab[opTabLine][2]="(04,1)";
-					}
-			     	opTabLine++;
-				}
-		        }
-		        line_count++;
-		        LC++;
-		    }   
-
-			System.out.println("___________________________________________________");  
-
-			//print symbol table
-			System.out.println("\n\n	SYMBOL TABLE		");
-			System.out.println("--------------------------");			
-			System.out.println("SYMBOL\tADDRESS\tLENGTH");
-			System.out.println("--------------------------");			
-			for(int i=0;i<symTabLine;i++)
-				System.out.println(SymbolTab[i][0]+"\t"+SymbolTab[i][1]+"\t"+SymbolTab[i][2]);
-			System.out.println("--------------------------");
-
-
-			//print opcode table
-			System.out.println("\n\n	OPCODE TABLE		");
-			System.out.println("----------------------------");			
-			System.out.println("MNEMONIC\tCLASS\tINFO");
-			System.out.println("----------------------------");			
-			for(int i=0;i<opTabLine;i++)
-				System.out.println(OpTab[i][0]+"\t\t"+OpTab[i][1]+"\t"+OpTab[i][2]);
-			System.out.println("----------------------------");
-
-			//print literal table
-			System.out.println("\n\n   LITERAL TABLE		");
-			System.out.println("-----------------");			
-			System.out.println("LITERAL\tADDRESS");
-			System.out.println("-----------------");			
-			for(int i=0;i<litTabLine;i++)
-				System.out.println(LitTab[i][0]+"\t"+LitTab[i][1]);
-			System.out.println("------------------");
-	
-
-			//intialization of POOLTAB
-			for(int i=0;i<litTabLine;i++)
-			{
-				if(LitTab[i][0]!=null && LitTab[i+1][0]!=null ) //if literals are present
-				{
-					if(i==0)
-					{
-						PoolTab[poolTabLine]=i+1;
-						poolTabLine++;
-					}
-					else if(Integer.parseInt(LitTab[i][1])<(Integer.parseInt(LitTab[i+1][1]))-1)
-					{	
-						PoolTab[poolTabLine]=i+2;
-						poolTabLine++;
+						pntab.put(parts[i], paramNo++);
+						pp++;
+						fvsppl.write(parts[i]+"\t\t"+"#"+i+"\n"+"\n"+"\n");
+						avsppl.write("\t\t"+"#"+i+"\n"+"\n"+"\n");
 					}
 				}
+				mnt.write(parts[0]+"\t"+pp+"\t"+"\t"+mdtp+"\t"+"\n");
+				//fvsppl.write(parts[0]+"\n"+"\n"+"\n"+"\n"+"\n");
+				kpdtp=kpdtp+kp;
+				//System.out.println("KP="+kp);
+				
+				
 			}
-			//print pool table
-			System.out.println("\n\n   POOL TABLE		");
-			System.out.println("-----------------");			
-			System.out.println("LITERAL NUMBER");
-			System.out.println("-----------------");			
-			for(int i=0;i<poolTabLine;i++)
-				System.out.println(PoolTab[i]);
-			System.out.println("------------------");
-			
-		
-		    // Always close files.
-		    bufferedReader.close();
+			else if(parts[0].equalsIgnoreCase("MEND"))
+			{
+				mdt.write(line+"\n");
+				flag=kp=pp=0;
+				mdtp++;
+				paramNo=1;
+				pnt.write(Macroname+":\t");
+				Iterator<String> itr=pntab.keySet().iterator();
+				while(itr.hasNext())
+				{
+					pnt.write(itr.next()+"\t");
+				}
+				pnt.write("\n");
+				pntab.clear();
+			}
+			else if(flag==1)
+			{
+				for(int i=0;i<parts.length;i++)
+				{
+					if(parts[i].contains("&"))
+					{
+						parts[i]=parts[i].replaceAll("[&,]", "");
+						mdt.write("(P,"+pntab.get(parts[i])+")\t");
+						fvsppl.write(parts[i]+"\t\t"+"#"+i+"\n"+"\n"+"\n");
+					}
+					else
+					{
+						mdt.write(parts[i]+"\t");
+					}
+				}
+				mdt.write("\n");
+				mdtp++;
+			}
+			else
+			{
+				ir.write(line+"\n");
+			}
+		}
+		br.close();
+		mdt.close();
+		mnt.close();
+		ir.close();
+		pnt.close();
+		fvsppl.close();
+		avsppl.close();
+		System.out.println("MAcro PAss1 Processing done."
+				+ "Check all outputs, "
+				+ "--------thnak you------ :)");
 	}
+
 }
+
+****************************************************************************************************************************************
+
 
 
 
